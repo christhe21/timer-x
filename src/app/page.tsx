@@ -28,7 +28,7 @@ export default function Home() {
       <div className="p-10 justify-center font-bold">
       <Timer />
       </div>
-    <footer className='font-bold text-lg text-slate-400 text-center'>Made with 🍕</footer>
+    <footer className="font-bold text-lg text-slate-400 text-center py-5">Made with 🍕</footer>
     </main>
   );
 }
