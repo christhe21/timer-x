@@ -8,7 +8,7 @@ const Timer: React.FC = () => {
   const [time, setTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
   useEffect(() => {
     // Request notification permission
     if ("Notification" in window && Notification.permission !== "granted") {
@@ -94,7 +94,7 @@ const Timer: React.FC = () => {
         />
         <button 
           onClick={handleSetTime} 
-          className="px-6 py-2 bg-blue-400 text-white rounded ${isTouchDevice ? '' : 'hover:bg-blue-700'}"
+          className="px-6 py-2 bg-blue-700 text-white rounded "
         >
           Set Timer
         </button>
@@ -103,20 +103,20 @@ const Timer: React.FC = () => {
         <button 
           onClick={handleStart} 
           disabled={isRunning || time === 0}
-          className="px-4 py-2 bg-green-400 text-white rounded ${isTouchDevice ? '' : 'hover:bg-green-700'} disabled:opacity-50"
+          className="px-4 py-2 bg-green-700 text-white rounded  disabled:opacity-50"
         >
           Start
         </button>
         <button 
           onClick={handlePause} 
           disabled={!isRunning}
-          className="px-4 py-2 bg-yellow-400 text-white rounded  ${isTouchDevice ? '' : 'hover:bg-yello-700'} disabled:opacity-50"
+          className="px-4 py-2 bg-yellow-700 text-white rounded disabled:opacity-50"
         >
           Pause
         </button>
         <button 
           onClick={handleReset}
-          className="px-4 py-2 bg-red-400 text-white rounded  ${isTouchDevice ? '' : 'hover:bg-red-700'}"
+          className="px-4 py-2 bg-red-700 text-white rounded "
         >
           Reset
         </button>
