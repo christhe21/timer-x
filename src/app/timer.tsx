@@ -9,6 +9,17 @@ const Timer: React.FC = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Pomodoro specific states
+  const [pomodoroMode, setPomodoroMode] = useState<boolean>(false); // To toggle between regular and pomodoro mode
+  const [pomodoroCycle, setPomodoroCycle] = useState<'work' | 'shortBreak' | 'longBreak'>('work');
+  const [pomodorosCompleted, setPomodorosCompleted] = useState<number>(0);
+  const [pomodoroSettings, setPomodoroSettings] = useState({
+    workDuration: 25 * 60, // 25 minutes in seconds
+    shortBreakDuration: 5 * 60, // 5 minutes in seconds
+    longBreakDuration: 15 * 60, // 15 minutes in seconds
+    cyclesBeforeLongBreak: 4,
+  });
+
   useEffect(() => {
     // Request notification permission
     if ("Notification" in window && Notification.permission !== "granted") {
@@ -21,20 +32,49 @@ const Timer: React.FC = () => {
         setTime((prevTime) => prevTime - 1);
       }, 1000);
     } else if (time === 0 && isRunning) {
-      setIsRunning(false);
-      handleTimerEnd();
+      handleTimerEnd(); // Call this regardless of mode.
+      if (pomodoroMode) {
+        if (pomodoroCycle === 'work') {
+          const newPomodorosCompleted = pomodorosCompleted + 1;
+          setPomodorosCompleted(newPomodorosCompleted);
+          if (newPomodorosCompleted % pomodoroSettings.cyclesBeforeLongBreak === 0) {
+            setPomodoroCycle('longBreak');
+            setTime(pomodoroSettings.longBreakDuration);
+          } else {
+            setPomodoroCycle('shortBreak');
+            setTime(pomodoroSettings.shortBreakDuration);
+          }
+        } else { // 'shortBreak' or 'longBreak'
+          setPomodoroCycle('work');
+          setTime(pomodoroSettings.workDuration);
+        }
+        setIsRunning(true); // Auto-start next cycle
+      } else {
+        setIsRunning(false);
+      }
     }
     return () => clearInterval(timer);
-  }, [isRunning, time]);
+  }, [isRunning, time, pomodoroMode, pomodoroCycle, pomodorosCompleted, pomodoroSettings]);
 
-  const handleStart = () => setIsRunning(true);
+  const handleStart = () => {
+    if (pomodoroMode && time === 0) {
+      setTime(pomodoroSettings.workDuration);
+    }
+    setIsRunning(true);
+  };
   const handlePause = () => setIsRunning(false);
   const handleReset = () => {
     setIsRunning(false);
-    setTime(0);
+    stopSound();
     setInputMinutes('0');
     setInputSeconds('0');
-    stopSound();
+    setPomodorosCompleted(0);
+    setPomodoroCycle('work');
+    if (pomodoroMode) {
+      setTime(pomodoroSettings.workDuration);
+    } else {
+      setTime(0);
+    }
   };
 
   const handleSetTime = () => {
