@@ -1,17 +1,17 @@
 'use client';
-import Timer from './timer';
+import Timer, { PomodoroSettingsType } from './timer';
 import React, { useState, useEffect } from 'react';
 
 export default function Home() {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [pomodoroMode, setPomodoroMode] = useState<boolean>(false);
-  const initialPomodoroSettings = {
+  const initialPomodoroSettings: PomodoroSettingsType = {
     workDuration: 25 * 60,
     shortBreakDuration: 5 * 60,
     longBreakDuration: 15 * 60,
     cyclesBeforeLongBreak: 4,
   };
-  const [pomodoroSettings, setPomodoroSettings] = useState(initialPomodoroSettings);
+  const [pomodoroSettings, setPomodoroSettings] = useState<PomodoroSettingsType>(initialPomodoroSettings);
 
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <main className="flex flex-col min-h-screen">
       <div className="p-5 w-full items-center justify-between font-mono text-sm lg:flex shadow-lg shadow-cyan-500/50">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300S bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
+        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           
           <code className="font-mono font-bold">{currentTime}</code>
         </p>
@@ -34,7 +34,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center flex-grow w-full px-4 py-8">
+      <div className="flex flex-col items-center flex-grow w-full px-4 py-8 visible opacity-100">
         {/* Pomodoro UI Elements */}
         <div className="mb-8">
           <button
@@ -57,7 +57,7 @@ export default function Home() {
                 <input
                   type="number"
                   value={pomodoroSettings.workDuration / 60}
-                  onChange={(e) => setPomodoroSettings(s => ({ ...s, workDuration: parseInt(e.target.value) * 60 }))}
+                  onChange={(e) => setPomodoroSettings(s => ({ ...s, workDuration: Math.max(1, parseInt(e.target.value) || 1) * 60 }))}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                 />
               </div>
@@ -66,7 +66,7 @@ export default function Home() {
                 <input
                   type="number"
                   value={pomodoroSettings.shortBreakDuration / 60}
-                  onChange={(e) => setPomodoroSettings(s => ({ ...s, shortBreakDuration: parseInt(e.target.value) * 60 }))}
+                  onChange={(e) => setPomodoroSettings(s => ({ ...s, shortBreakDuration: Math.max(1, parseInt(e.target.value) || 1) * 60 }))}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                 />
               </div>
@@ -75,7 +75,7 @@ export default function Home() {
                 <input
                   type="number"
                   value={pomodoroSettings.longBreakDuration / 60}
-                  onChange={(e) => setPomodoroSettings(s => ({ ...s, longBreakDuration: parseInt(e.target.value) * 60 }))}
+                  onChange={(e) => setPomodoroSettings(s => ({ ...s, longBreakDuration: Math.max(1, parseInt(e.target.value) || 1) * 60 }))}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                 />
               </div>
@@ -84,7 +84,7 @@ export default function Home() {
                 <input
                   type="number"
                   value={pomodoroSettings.cyclesBeforeLongBreak}
-                  onChange={(e) => setPomodoroSettings(s => ({ ...s, cyclesBeforeLongBreak: parseInt(e.target.value) }))}
+                  onChange={(e) => setPomodoroSettings(s => ({ ...s, cyclesBeforeLongBreak: Math.max(1, parseInt(e.target.value) || 1) }))}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                 />
               </div>
